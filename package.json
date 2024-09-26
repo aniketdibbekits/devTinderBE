@@ -1,0 +1,19 @@
+{
+  "name": "devtinderbe",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "nodeJs",
+    "js",
+    "BE"
+  ],
+  "author": "aniketdibbe",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
