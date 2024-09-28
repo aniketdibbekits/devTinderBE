@@ -1,13 +1,35 @@
 const express = require("express");
 
 const app = express();
-const adminAuth = require("./middlewares/auth");
 
-app.use("/admin", adminAuth);
+const connectDB = require("./config/database");
 
-app.get("/admin/getAllData", (req, res) => {
-  res.send("all data sent");
+const User = require("./models/user");
+
+app.post("/signUp", async (req, res) => {
+  const user = new User({
+    firstName: "Aniket",
+    lastName: "Dibbe",
+    emailId: "aniketdibbe@gmail.com",
+    password: "Aniket@123",
+  });
+
+  try {
+    await user.save();
+    res.send("User added successfully!");
+  } catch (err) {
+    res.send("Something went wrong!");
+  }
 });
-app.listen(3000, () => {
-  console.log("Server is Up!");
-});
+
+connectDB()
+  .then(() => {
+    console.log("Connectes to DB");
+    app.listen(7777, () => {
+      console.log("Server is Up!");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+    console.log("Connection to DB failed");
+  });
