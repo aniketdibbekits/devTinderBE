@@ -47,7 +47,7 @@ app.post("/login", async (req, res) => {
 
     // Compare the provided password with the stored password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    const token = await jwt.sign({_id:user._id},"aniket",{expiresIn:"1d"});
+    const token = await user.getJWT();
     if (isPasswordValid) {
       res.cookie("token",token, { expires: new Date(Date.now() +8* 900000)})
       res.send("User login successful!");
