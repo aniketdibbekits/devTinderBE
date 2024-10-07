@@ -6,6 +6,10 @@ const connectDB = require("./config/database");
 const validator = require("validator")
 const User = require("./models/user");
 const bcrypt = require('bcrypt');
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
+app.use(cookieParser())
 
 app.post("/signUp", async (req, res) => {
   try {
@@ -42,8 +46,9 @@ app.post("/login", async (req, res) => {
 
     // Compare the provided password with the stored password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
+    const token = await jwt.sign({_id:user._id},"aniket");
     if (isPasswordValid) {
+      res.cookie("cookie",token)
       res.send("User login successful!");
     } else {
       throw new Error("Invalid Credentials");
@@ -54,6 +59,31 @@ app.post("/login", async (req, res) => {
     res.status(400).send("Error: " + err.message);
   }
 });
+
+app.get("/profile",async(req,res)=>{
+  try{
+
+  
+  const cookies = req.cookies;
+  const {token} = cookies;
+  if(!token){
+    throw new Error("Invalid Token")
+  }
+  const decodedMessage = jwt.verify(token,"aniket");
+  const {_id} = decodedMessage;
+  const user = await User.findById(_id);
+  if(!user){
+    throw new Error("User not found")
+  }
+  console.log(user)
+  res.send(user)
+  }
+  catch (err) {
+    console.log(err);
+    res.status(400).send("Error: " + err.message);
+  }
+
+})
 
 
 //single user api get("/user");
