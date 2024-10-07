@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require('validator')
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -14,10 +15,20 @@ const userSchema = new mongoose.Schema({
     lowercase:true,
     trim:true,
     required:true,
+    validate(value){
+      if(!validator.isEmail(value)){
+        throw new Error("Email is not validated"+value)
+      }
+    }
   },
   password: {
     type: String,
     required:true,
+    validate(value){
+      if(!validator.isStrongPassword(value)){
+        throw new Error("Password is not strong!"+value)
+      }
+    }
   },
   age: {
     type: Number,
@@ -33,7 +44,12 @@ const userSchema = new mongoose.Schema({
   },
   photoUrl:{
     type: String,
-    default: "abcd"
+    default: "https://tse4.mm.bing.net/th?id=OIP.SAcV4rjQCseubnk32USHigHaHx&pid=Api&P=0&h=180",
+    validate(value){
+      if(!validator.isURL(value)){
+        throw new Error("Photourl is not validated"+value)
+      }
+    }
   },
   skills: {
     type: ["string"]
