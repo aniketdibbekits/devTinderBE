@@ -8,6 +8,7 @@ const User = require("./models/user");
 const bcrypt = require('bcrypt');
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const userAuth = require("./middlewares/auth")
 
 app.use(cookieParser())
 
@@ -46,9 +47,9 @@ app.post("/login", async (req, res) => {
 
     // Compare the provided password with the stored password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    const token = await jwt.sign({_id:user._id},"aniket");
+    const token = await jwt.sign({_id:user._id},"aniket",{expiresIn:"1d"});
     if (isPasswordValid) {
-      res.cookie("cookie",token)
+      res.cookie("token",token, { expires: new Date(Date.now() +8* 900000)})
       res.send("User login successful!");
     } else {
       throw new Error("Invalid Credentials");
@@ -60,22 +61,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile",async(req,res)=>{
+app.get("/profile",userAuth,async(req,res)=>{
   try{
-
-  
-  const cookies = req.cookies;
-  const {token} = cookies;
-  if(!token){
-    throw new Error("Invalid Token")
-  }
-  const decodedMessage = jwt.verify(token,"aniket");
-  const {_id} = decodedMessage;
-  const user = await User.findById(_id);
-  if(!user){
-    throw new Error("User not found")
-  }
-  console.log(user)
+  const user = req.user;
   res.send(user)
   }
   catch (err) {
@@ -121,58 +109,7 @@ app.get("/feed",async(req,res)=>{
   }
 });
 
-app.delete("/user",async(req,res)=>{
-  const userId = req.body.userId;
-  try{
-    const user = await User.findByIdAndDelete(userId);
-    res.send("User deleted succesfully")
-  }
-  catch(err){
-    res.status(400).send("Something went wrong")
-  }
-});
 
-//update the user
-app.patch("/user/:userId", async (req, res) => {
-  const userId = req.params?.userId;
-  const data = req.body;
-
-  try {
-    const UPDATES_ALLOWED = [
-      "photoUrl",
-      "skills",
-      "age",
-      "gender",
-      "about"
-    ];
-
-    // Check if all keys in data are allowed updates
-    const isAllowedUpdates = Object.keys(data).every((key) => {
-      return UPDATES_ALLOWED.includes(key); // Return true/false
-    });
-
-
-    if (!isAllowedUpdates) {
-      throw new Error("Update not allowed");
-    }
-    if(data.skills?.length >5){
-      throw new Error("only 5 skills allowed")
-    }
-
-    const user = await User.findByIdAndUpdate(userId, data, {
-      new: true, // Return the updated document
-      runValidators: true,
-    });
-
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    res.send("User updated successfully");
-  } catch (err) {
-    res.status(400).send("Update failed: " + err.message);
-  }
-});
 
 
 connectDB()
