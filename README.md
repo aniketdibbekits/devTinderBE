@@ -21,3 +21,5 @@ To initialise the project
 # When we do app.use it will handle all tytpeof request whether it is get,post,put
 
 # We can have multiple route handler also
+
+# We use router to group multiple same routes together
