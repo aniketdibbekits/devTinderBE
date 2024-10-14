@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   emailId: {
     type: String,
     unique:true,
+    index:true,
     lowercase:true,
     trim:true,
     required:true,

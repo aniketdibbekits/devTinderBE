@@ -23,3 +23,5 @@ To initialise the project
 # We can have multiple route handler also
 
 # We use router to group multiple same routes together
+# enum is just like validation to know that values only should be accepted
+# if u wanrt to make ur db more scalable u can use indexes for that unique is true or index true
