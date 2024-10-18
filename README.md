@@ -25,3 +25,8 @@ To initialise the project
 # We use router to group multiple same routes together
 # enum is just like validation to know that values only should be accepted
 # if u wanrt to make ur db more scalable u can use indexes for that unique is true or index true
+
+# we can connect the two collections using ref:"Collection name" and we can populate the data populate("key",[name,age])  they are just like joins in mySql
+
+# pagination
+# there are two functions in MongoDb skip() and limit()
