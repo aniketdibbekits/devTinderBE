@@ -30,3 +30,7 @@ To initialise the project
 
 # pagination
 # there are two functions in MongoDb skip() and limit()
+/feed?page=1&limit=10   0-10 skip(0)& limit(10)
+/feed?page=2&limit=10   11-20 skip(10 )& limit(10)
+
+
