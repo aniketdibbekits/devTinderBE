@@ -33,4 +33,10 @@ To initialise the project
 /feed?page=1&limit=10   0-10 skip(0)& limit(10)
 /feed?page=2&limit=10   11-20 skip(10 )& limit(10)
 
+# install cors and add configurations
+app.use(cors({
+  origin:"http://localhost:5175",
+  credentials:true
+}))
+
 

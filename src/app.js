@@ -1,5 +1,10 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
+app.use(cors({
+  origin:"http://localhost:5175",
+  credentials:true
+}))
 app.use(express.json())
 const connectDB = require("./config/database");
 const userAuth = require("./middlewares/auth")
